@@ -31,6 +31,7 @@ func TestDialContextCancel(t *testing.T) {
 	}()
 
 	cancel()
+	t.Logf("Context error after cancelling: %q", ctx.Err())
 	<-sync
 
 	if ctx.Err() != context.Canceled {

@@ -31,10 +31,19 @@ func TestDialTimeout(t *testing.T) {
 		t.Fatal("connection did not time out")
 	}
 	nErr, ok := err.(net.Error)
+	t.Log(nErr) // dial tcp 10.0.0.1:80: lookup 10.0.0.1:80 on 127.0.0.1: connection timed out
 	if !ok {
 		t.Fatal(err)
 	}
 	if !nErr.Timeout() {
 		t.Fatal("error is not a timeout")
 	}
+}
+
+func TestDialTimeoutNoTimeout(t *testing.T) {
+	c, err := net.Dial("tcp", "nickfiggins.com:443")
+	if err != nil {
+		t.Fatal("connection timed out")
+	}
+	c.Close()
 }

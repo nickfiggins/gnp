@@ -20,7 +20,7 @@ func TestDial(t *testing.T) {
 		for {
 			conn, err := listener.Accept()
 			if err != nil {
-				t.Log(err)
+				t.Log(err) //  accept tcp 127.0.0.1:49428: use of closed network connection
 				return
 			}
 
@@ -34,12 +34,11 @@ func TestDial(t *testing.T) {
 				for {
 					n, err := c.Read(buf)
 					if err != nil {
-						if err != io.EOF {
+						if err != io.EOF { // EOF occurs once we send FIN to close the connection
 							t.Error(err)
 						}
 						return
 					}
-
 					t.Logf("received: %q", buf[:n])
 				}
 			}(conn)
