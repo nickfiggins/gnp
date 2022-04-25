@@ -26,15 +26,17 @@ func TestDeadline(t *testing.T) {
 			close(sync) // read from sync shouldn't block due to early return
 		}()
 
-		err = conn.SetDeadline(time.Now().Add(5 * time.Second))
+		err = conn.SetDeadline(time.Now().Add(5 * time.Second)) // 5 second deadline to read (and/or write)
 		if err != nil {
 			t.Error(err)
 			return
 		}
 
 		buf := make([]byte, 1)
+		t.Log("Beginning read...")
 		_, err = conn.Read(buf) // blocked until remote node sends data
-		nErr, ok := err.(net.Error)
+		t.Log("Finished reading!") // 5 seconds later
+		nErr, ok := err.(net.Error) // we get a timeout since no data was sent after 5 seconds
 		if !ok || !nErr.Timeout() {
 			t.Errorf("expected timeout error; actual: %v", err)
 		}
@@ -47,9 +49,13 @@ func TestDeadline(t *testing.T) {
 			return
 		}
 
-		_, err = conn.Read(buf)
+		_, err = conn.Read(buf) // wait 5 seconds again
 		if err != nil {
 			t.Error(err)
+		}
+
+		if string(buf) != "1" {
+			t.Error("buf not equal to written value")
 		}
 	}()
 
@@ -59,7 +65,7 @@ func TestDeadline(t *testing.T) {
 	}
 	defer conn.Close()
 
-	<-sync
+	<-sync // triggers the write beginning on line 44
 	_, err = conn.Write([]byte("1"))
 	if err != nil {
 		t.Fatal(err)

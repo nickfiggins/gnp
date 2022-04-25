@@ -134,7 +134,10 @@ func TestProxy(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if actual := string(buf[:n]); actual != m.Reply {
+		actual := string(buf[:n])		
+		t.Logf("%q -> proxy -> %q", m.Message, actual)
+		
+		if actual != m.Reply {
 			t.Errorf("%d: expected reply: %q; actual: %q",
 				i, m.Reply, actual)
 		}

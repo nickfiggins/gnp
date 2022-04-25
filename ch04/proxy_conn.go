@@ -5,6 +5,8 @@ import (
 	"net"
 )
 
+
+// net.Conn implements both the io.Writer and io.Reader interface, which allows us to easily us io.Copy to proxy requests
 func proxyConn(source, destination string) error {
 	connSource, err := net.Dial("tcp", source)
 	if err != nil {

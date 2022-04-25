@@ -11,7 +11,7 @@ func ExamplePinger() {
 	ctx, cancel := context.WithCancel(context.Background())
 	r, w := io.Pipe() // in lieu of net.Conn
 	done := make(chan struct{})
-	resetTimer := make(chan time.Duration, 1)
+	resetTimer := make(chan time.Duration, 1) // a buffered channel of size 1
 	resetTimer <- time.Second // initial ping interval
 
 	go func() {
