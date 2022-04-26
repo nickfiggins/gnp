@@ -9,6 +9,13 @@ import (
 	"time"
 )
 
+/*
+	Every UDP connection is a listener
+
+	UDP does not have sessions
+
+	UDP headers are 28 bytes, so max req size is payload + 28 bytes
+*/
 func TestEchoServerUDP(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	serverAddr, err := echoServerUDP(ctx, "127.0.0.1:")

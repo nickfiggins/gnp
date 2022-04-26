@@ -15,7 +15,8 @@ func TestZeroWindow(t *testing.T) {
 		if err != nil {
 			return err
 		}
-		handle(buf[:n]) // BLOCKS!
+		handle(buf[:n]) // BLOCKS! (receive buffer may fill up during this, before getting to the next conn.Read().
+		// Each conn.Read in this case frees up 1024 bytes
 	}
 	*/
 }

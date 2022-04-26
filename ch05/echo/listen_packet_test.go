@@ -3,6 +3,7 @@ package echo
 import (
 	"bytes"
 	"context"
+	"log"
 	"net"
 	"testing"
 )
@@ -47,6 +48,8 @@ func TestListenPacketUDP(t *testing.T) {
 	n, addr, err := client.ReadFrom(buf)
 	if err != nil {
 		t.Fatal(err)
+	} else {
+		log.Printf("Read %v bytes from %q", n, addr)
 	}
 
 	if !bytes.Equal(interrupt, buf[:n]) {
